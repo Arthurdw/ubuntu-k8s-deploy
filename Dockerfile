@@ -10,4 +10,4 @@ RUN apt-get update && apt-get install -y \
   apt-get install -y kubectl && \
   apt-get clean
 
-CMD ["bash"]
+CMD ["/bin/bash"]
