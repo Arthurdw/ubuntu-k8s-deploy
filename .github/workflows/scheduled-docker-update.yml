@@ -53,10 +53,10 @@ jobs:
           echo "updated=false" >> $GITHUB_OUTPUT
           if [ "$latest_ubuntu_image_id" != "$current_ubuntu_image_id" ]; then
             echo "updated=true" >> $GITHUB_OUTPUT
-            echo "latest_ubuntu_image_id=$latest_ubuntu_image_id" >> $GITHUB_OUTPUT
             # Generate short and full hash versions for tags
-            short_hash=${latest_ubuntu_image_id:7:8} # Get the first 8 characters after 'sha256:'
-            echo "full_hash=${latest_ubuntu_image_id}" >> $GITHUB_OUTPUT
+            full_hash=${latest_ubuntu_image_id:7}
+            short_hash=${latest_ubuntu_image_id:7:8} 
+            echo "full_hash=${full_hash}" >> $GITHUB_OUTPUT
             echo "short_hash=${short_hash}" >> $GITHUB_OUTPUT
           fi
 
