@@ -56,6 +56,11 @@ jobs:
             echo "latest_ubuntu_image_id=$latest_ubuntu_image_id" >> $GITHUB_OUTPUT
           fi
 
+      - name: Debug Output
+        run: |
+          echo "Updated: ${{ steps.ubuntu_update.outputs.updated }}"
+          echo "Latest Image ID: ${{ steps.ubuntu_update.outputs.latest_ubuntu_image_id }}"
+
       - name: Commit and push ubuntu_image_id.txt
         if: steps.ubuntu_update.outputs.updated == 'true'
         env:
