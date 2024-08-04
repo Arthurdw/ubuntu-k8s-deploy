@@ -13,5 +13,3 @@ RUN apt-get update && apt-get install -y \
   apt-get install -y kubectl helm && \
   apt-get clean && \
   curl -sSL https://get.docker.com | sh
-
-ENTRYPOINT ["/bin/bash"]
