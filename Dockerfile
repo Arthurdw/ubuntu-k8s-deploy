@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
   apt-get update && \
   apt-get install -y kubectl helm && \
-  apt-get clean
+  apt-get clean && \
+  curl -sSL https://get.docker.com | sh
 
 CMD ["/bin/bash"]
