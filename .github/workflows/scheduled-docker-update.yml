@@ -64,7 +64,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add ubuntu_image_id.txt
           git commit -m "Update ubuntu_image_id.txt"
-          # git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main
 
       - name: Push changes
         uses: ad-m/github-push-action@master
