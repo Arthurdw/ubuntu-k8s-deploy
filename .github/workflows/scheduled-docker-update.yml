@@ -66,13 +66,6 @@ jobs:
           git add ubuntu_image_id.txt
           git commit -m "Update ubuntu_image_id.txt"
 
-      - name: Push changes
-        if: steps.ubuntu_update.outputs.updated == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT_TOKEN }}
-          branch: ${{ github.ref }}
-
       - name: Build and push Docker image
         if: steps.ubuntu_update.outputs.updated == 'true'
         uses: docker/build-push-action@v4
@@ -82,3 +75,10 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/ubuntu-k8s-deploy:latest
             ${{ secrets.DOCKER_USERNAME }}/ubuntu-k8s-deploy:${{ steps.ubuntu_update.outputs.latest_ubuntu_image_id }}
+
+      - name: Push changes
+        if: steps.ubuntu_update.outputs.updated == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT_TOKEN }}
+          branch: ${{ github.ref }}
