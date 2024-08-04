@@ -1,9 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt-get update && apt-get install -y \
-  curl \
-  apt-transport-https \
-  gnupg2 && \
+  curl apt-transport-https gnupg2 jq && \
   curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
   chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
   echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list && \
@@ -14,6 +12,7 @@ RUN apt-get update && apt-get install -y \
   apt-get update && \
   apt-get install -y kubectl helm && \
   apt-get clean && \
-  curl -sSL https://get.docker.com | sh
+  curl -sSL https://get.docker.com | sh && \
+  systemctl enable --now docker
 
 CMD ["/bin/bash"]
