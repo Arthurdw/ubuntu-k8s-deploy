@@ -50,9 +50,9 @@ jobs:
           echo $latest_ubuntu_image_id > ubuntu_image_id.txt
 
           # Set output variable
-          echo "::set-output name=updated::false"
+          echo "updated=false" >> $GITHUB_OUTPUT
           if [ "$latest_ubuntu_image_id" != "$current_ubuntu_image_id" ]; then
-            echo "::set-output name=updated::true"
+            echo "updated=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Commit and push ubuntu_image_id.txt
@@ -66,6 +66,7 @@ jobs:
           git commit -m "Update ubuntu_image_id.txt"
 
       - name: Push changes
+        if: steps.ubuntu_update.outputs.updated == 'true'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT_TOKEN }}
