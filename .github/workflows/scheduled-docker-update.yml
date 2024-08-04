@@ -1,0 +1,72 @@
+name: Scheduled Build and Push Docker Image
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs every day at midnight
+  workflow_dispatch: # Allows manual triggering of the workflow
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Check for Ubuntu updates
+        id: ubuntu_update
+        run: |
+          # Pull the latest Ubuntu image
+          docker pull ubuntu:latest
+          # Get the image ID of the latest Ubuntu image
+          latest_ubuntu_image_id=$(docker inspect --format='{{.Id}}' ubuntu:latest)
+          echo "Latest Ubuntu Image ID: $latest_ubuntu_image_id"
+
+          # Compare with the current image ID
+          if [ -f ubuntu_image_id.txt ]; then
+            current_ubuntu_image_id=$(cat ubuntu_image_id.txt)
+          else
+            current_ubuntu_image_id=""
+          fi
+
+          echo "Current Ubuntu Image ID: $current_ubuntu_image_id"
+
+          # Save the latest image ID
+          echo $latest_ubuntu_image_id > ubuntu_image_id.txt
+
+          # Set output variable
+          echo "::set-output name=updated::false"
+          if [ "$latest_ubuntu_image_id" != "$current_ubuntu_image_id" ]; then
+            echo "::set-output name=updated::true"
+          fi
+
+      - name: Commit and push ubuntu_image_id.txt
+        if: steps.ubuntu_update.outputs.updated == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ubuntu_image_id.txt
+          git commit -m "Update ubuntu_image_id.txt"
+          git push origin HEAD:main
+
+      - name: Build and push Docker image
+        if: steps.ubuntu_update.outputs.updated == 'true'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/ubuntu-k8s-deploy:latest
+            ${{ secrets.DOCKER_USERNAME }}/ubuntu-k8s-deploy:${{ steps.ubuntu_update.outputs.latest_ubuntu_image_id }}
