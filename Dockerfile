@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
   apt-get update && \
   apt-get install -y kubectl helm && \
   apt-get clean && \
-  curl -sSL https://get.docker.com | sh && \
-  systemctl enable --now docker
+  curl -sSL https://get.docker.com | sh
 
-CMD ["/bin/bash"]
+ENTRYPOINT ["/bin/bash"]
