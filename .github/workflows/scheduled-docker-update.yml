@@ -54,12 +54,14 @@ jobs:
 
       - name: Commit and push ubuntu_image_id.txt
         if: steps.ubuntu_update.outputs.updated == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
           git add ubuntu_image_id.txt
           git commit -m "Update ubuntu_image_id.txt"
-          git push origin HEAD:main
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main
 
       - name: Build and push Docker image
         if: steps.ubuntu_update.outputs.updated == 'true'
