@@ -53,6 +53,7 @@ jobs:
           echo "updated=false" >> $GITHUB_OUTPUT
           if [ "$latest_ubuntu_image_id" != "$current_ubuntu_image_id" ]; then
             echo "updated=true" >> $GITHUB_OUTPUT
+            echo "latest_ubuntu_image_id=$latest_ubuntu_image_id" >> $GITHUB_OUTPUT
           fi
 
       - name: Commit and push ubuntu_image_id.txt
@@ -64,13 +65,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add ubuntu_image_id.txt
           git commit -m "Update ubuntu_image_id.txt"
-
-      - name: Push changes
-        if: steps.ubuntu_update.outputs.updated == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT_TOKEN }}
-          branch: ${{ github.ref }}
+          git push origin ${{ github.ref }}
 
       - name: Build and push Docker image
         if: steps.ubuntu_update.outputs.updated == 'true'
