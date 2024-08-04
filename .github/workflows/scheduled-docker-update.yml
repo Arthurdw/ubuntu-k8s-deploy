@@ -68,10 +68,10 @@ jobs:
 
       - name: Push changes
         if: steps.ubuntu_update.outputs.updated == 'true'
-        uses: ad-m/github-push-action@v0.6.0
+        uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT_TOKEN }}
-          branch: main
+          branch: ${{ github.ref }}
 
       - name: Build and push Docker image
         if: steps.ubuntu_update.outputs.updated == 'true'
