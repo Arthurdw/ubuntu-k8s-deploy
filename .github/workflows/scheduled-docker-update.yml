@@ -65,7 +65,13 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add ubuntu_image_id.txt
           git commit -m "Update ubuntu_image_id.txt"
-          git push origin ${{ github.ref }}
+
+      - name: Push changes
+        if: steps.ubuntu_update.outputs.updated == 'true'
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.PAT_TOKEN }}
+          branch: main
 
       - name: Build and push Docker image
         if: steps.ubuntu_update.outputs.updated == 'true'
