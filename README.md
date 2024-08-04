@@ -7,7 +7,7 @@ This Docker image is designed to facilitate seamless deployment of Kubernetes ap
 ## Features
 
 - **Base Image**: Built on the latest Ubuntu, ensuring a stable and secure environment.
-- **Kubernetes CLI**: Includes `kubectl`, the command-line tool for interacting with Kubernetes clusters.
+- **Kubernetes CLI**: Includes `kubectl` and `helm`, the command-line tools for interacting with Kubernetes clusters.
 - **Lightweight**: Built with a minimal set of dependencies, ensuring faster build times and reduced image sizes.
 - **Easy to Use**: The image comes with a default command that opens a Bash shell, allowing for easy interaction and execution of commands.
 
